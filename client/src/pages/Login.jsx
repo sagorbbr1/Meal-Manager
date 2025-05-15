@@ -15,14 +15,23 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await API.post("/auth/login", formData);
-    if (res.status !== 200) {
-      toast.error("Login failed. Please try again.");
-      return;
+    try {
+      const res = await API.post("/auth/login", formData, {
+        withCredentials: true,
+      });
+
+      if (res.status !== 200) {
+        toast.error("Login failed. Please try again.");
+        return;
+      }
+
+      console.log("Login response:", res.data);
+      toast.success("Login successful!");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error(error?.response?.data?.msg || "Something went wrong.");
     }
-    console.log("Login response:", res.data);
-    toast.success("Login successful!");
-    navigate("/");
   };
 
   return (

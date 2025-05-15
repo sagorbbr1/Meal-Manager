@@ -38,7 +38,7 @@ const RegisterPage = () => {
       confirmPassword: "",
     });
 
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
