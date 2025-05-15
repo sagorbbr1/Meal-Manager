@@ -6,18 +6,29 @@ import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import NoPage from "./pages/NoPage";
 import Dashboard from "./pages/Dashboard";
+import { AuthProvider } from "./context/authContext";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" exact element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+      <AuthProvider>
+        <Routes>
+          <Route path="/" exact element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route path="*" element={<NoPage />} />
-      </Routes>
+          <Route path="*" element={<NoPage />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

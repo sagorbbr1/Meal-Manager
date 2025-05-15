@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import API from "../../utils/axios";
+import { useAuth } from "../context/AuthContext";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,21 +27,23 @@ const RegisterPage = () => {
       return;
     }
 
-    console.log("Registering:", formData);
-    const res = await API.post("/auth/register", formData);
-    if (res.status !== 201) {
-      toast.error("Registration failed. Please try again.");
-      return;
-    }
-    toast.success("Registration successful!");
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+    try {
+      const res = await API.post("/auth/register", formData, {
+        withCredentials: true,
+      });
 
-    navigate("/dashboard");
+      if (res.status !== 201) {
+        toast.error("Registration failed. Please try again.");
+        return;
+      }
+
+      toast.success("Registration successful!");
+      setUser(res.data.user);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Register error:", err);
+      toast.error(err?.response?.data?.msg || "Something went wrong.");
+    }
   };
 
   return (

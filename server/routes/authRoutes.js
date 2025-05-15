@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const verifyToken = require("../middlewares/authMiddleware");
 
 router.post("/register", async (req, res) => {
   try {
@@ -66,6 +67,26 @@ router.post("/login", async (req, res) => {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
+});
+
+router.get("/user", verifyToken, async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "Not authenticated" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({ user });
+  } catch (err) {
+    console.error("Auth check error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/logout", verifyToken, (req, res) => {
+  res.clearCookie("token").json({ message: "Logged out" });
 });
 
 module.exports = router;

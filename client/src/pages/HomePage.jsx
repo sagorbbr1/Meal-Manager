@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import FeatureCard from "../components/FeatureCard";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 const HomePage = () => {
+  const { user, authLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate("/dashboard");
+    }
+  }, [authLoading, user, navigate]);
+
+  if (authLoading) {
+    return <p className="text-center mt-10">Loading...</p>; // show nothing until auth check finishes
+  }
+
   return (
     <div className="bg-slate-50 text-slate-800 font-sans">
       <Navbar />

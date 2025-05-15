@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -8,8 +8,12 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import API from "../../utils/axios";
+import { useAuth } from "../context/authContext";
 
 const Sidebar = () => {
+  const { user, setUser } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const location = useLocation();
 
@@ -17,9 +21,13 @@ const Sidebar = () => {
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { name: "Members", icon: Users, path: "/dashboard/members" },
     { name: "Reports", icon: FileText, path: "/dashboard/reports" },
-    { name: "Logout", icon: LogOut, path: "/logout" },
   ];
 
+  const handleLogout = async () => {
+    await API.post("/auth/logout", {}, { withCredentials: true });
+    setUser(null);
+    navigate("/login");
+  };
   return (
     <div className="flex h-screen overflow-hidden bg-gradient-to-tr from-emerald-50 to-white">
       <aside
@@ -48,6 +56,12 @@ const Sidebar = () => {
             </Link>
           ))}
         </nav>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
+        >
+          <LogOut size={20} /> Logout
+        </button>
       </aside>
 
       <div className="flex-1 overflow-auto">

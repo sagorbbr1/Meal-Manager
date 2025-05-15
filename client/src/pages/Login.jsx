@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import API from "../../utils/axios";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
 
@@ -25,8 +27,9 @@ const LoginPage = () => {
         return;
       }
 
-      console.log("Login response:", res.data);
       toast.success("Login successful!");
+
+      setUser(res.data.user);
       navigate("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
