@@ -2,6 +2,7 @@ import React from "react";
 import FeatureCard from "../components/FeatureCard";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { Link } from "react-router";
 
 const HomePage = () => {
   return (
@@ -16,12 +17,12 @@ const HomePage = () => {
           <p className="text-lg text-slate-600 mb-8">
             Track meals, expenses, and members — all in one place.
           </p>
-          <a
-            href="#"
+          <Link
+            to="/login"
             className="bg-emerald-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-emerald-700 transition"
           >
             Get Started
-          </a>
+          </Link>
         </div>
       </section>
 

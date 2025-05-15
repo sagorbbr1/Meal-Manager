@@ -22,7 +22,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen bg-gradient-to-tr from-emerald-50 to-white overflow-hidden">
-      {/* Sidebar */}
       <aside
         className={`fixed md:static top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -58,9 +57,7 @@ const Dashboard = () => {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-auto">
-        {/* Mobile top bar */}
         <header className="md:hidden flex items-center p-4 shadow-sm bg-white">
           <button
             className="mr-4"
@@ -72,7 +69,6 @@ const Dashboard = () => {
           <h1 className="text-xl font-bold text-emerald-600">Dashboard</h1>
         </header>
 
-        {/* Content Area */}
         <main className="p-6 max-w-7xl mx-auto space-y-10">
           <div>
             <h1 className="text-4xl font-bold text-emerald-700 mb-1">
