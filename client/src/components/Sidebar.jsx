@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -8,16 +7,17 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import API from "../../utils/axios";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../context/AuthContext";
 
 const Sidebar = () => {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
   const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const links = [
+  const navLinks = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { name: "Members", icon: Users, path: "/dashboard/members" },
     { name: "Reports", icon: FileText, path: "/dashboard/reports" },
@@ -28,55 +28,60 @@ const Sidebar = () => {
     setUser(null);
     navigate("/login");
   };
+
   return (
-    <div className="flex h-screen overflow-hidden bg-gradient-to-tr from-emerald-50 to-white">
+    <>
+      <header className="md:hidden flex items-center justify-between p-4 shadow bg-white fixed top-0 left-0 right-0 z-50">
+        <button onClick={() => setSidebarOpen(true)} aria-label="Open sidebar">
+          <Menu size={24} />
+        </button>
+        <h2 className="text-xl font-bold text-emerald-600">Meal Manager</h2>
+        <div className="w-6" /> {/* empty space to balance flex */}
+      </header>
+
       <aside
-        className={`${
-          open ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 fixed md:static w-72 bg-white shadow-lg transition-transform duration-300 z-40`}
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:static md:translate-x-0`}
       >
-        <div className="flex items-center justify-between p-6 border-b">
+        <div className="hidden md:flex items-center justify-between p-6 border-b">
           <h2 className="text-2xl font-bold text-emerald-600">Meal Manager</h2>
-          <button className="md:hidden" onClick={() => setOpen(false)}>
-            <X />
+        </div>
+
+        <div className="flex md:hidden justify-end p-4">
+          <button
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close sidebar"
+          >
+            <X size={24} />
           </button>
         </div>
-        <nav className="flex flex-col gap-1 p-4">
-          {links.map(({ name, icon: Icon, path }) => (
+
+        <nav className="flex flex-col p-4 space-y-2">
+          {navLinks.map(({ name, icon: Icon, path }) => (
             <Link
               key={name}
               to={path}
+              onClick={() => setSidebarOpen(false)}
               className={`flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 ${
                 location.pathname === path
                   ? "bg-emerald-100 text-emerald-700"
                   : "text-gray-700"
               }`}
             >
-              <Icon size={20} /> {name}
+              <Icon size={20} />
+              {name}
             </Link>
           ))}
-        </nav>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
-        >
-          <LogOut size={20} /> Logout
-        </button>
-      </aside>
-
-      <div className="flex-1 overflow-auto">
-        <div className="md:hidden flex items-center p-4">
-          <button onClick={() => setOpen(true)}>
-            <Menu />
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
+          >
+            <LogOut size={20} /> Logout
           </button>
-          <h1 className="ml-4 text-xl font-bold text-emerald-600">Dashboard</h1>
-        </div>
-
-        <main className="p-6">
-          <Outlet />
-        </main>
-      </div>
-    </div>
+        </nav>
+      </aside>
+    </>
   );
 };
 
