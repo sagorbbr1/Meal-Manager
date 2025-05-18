@@ -27,8 +27,23 @@ function App() {
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/dashboard/members" element={<Members />} />
-          <Route path="/dashboard/reports" element={<Reports />} />
+          <Route
+            path="/dashboard/members"
+            element={
+              <ProtectedRoute>
+                {" "}
+                <Members />{" "}
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/reports"
+            element={
+              <ProtectedRoute>
+                <Reports />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="*" element={<NoPage />} />
         </Routes>
