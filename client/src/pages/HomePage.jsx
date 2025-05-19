@@ -3,7 +3,9 @@ import FeatureCard from "../components/FeatureCard";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../context/AuthContext";
+
+import Spinner from "../components/Spinner";
 
 const HomePage = () => {
   const { user, authLoading } = useAuth();
@@ -16,7 +18,7 @@ const HomePage = () => {
   }, [authLoading, user, navigate]);
 
   if (authLoading) {
-    return <p className="text-center mt-10">Loading...</p>; // show nothing until auth check finishes
+    return <Spinner authLoading={authLoading} />;
   }
 
   return (
