@@ -1,15 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderNav from "../components/HeaderNav";
 import { toast, ToastContainer } from "react-toastify";
+import API from "../utils/axios";
 
 const CreateYourMess = () => {
   const [messName, setMessName] = useState("");
   const [month, setMonth] = useState("");
   const [role, setRole] = useState("member");
   const [showModal, setShowModal] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkMess = async () => {
+      try {
+        const res = await API.get("/mess/mine", { withCredentials: true });
+        if (res.data?.mess) {
+          navigate("/dashboard");
+        } else {
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error("Mess check failed", err);
+        setLoading(false);
+      }
+    };
+    checkMess();
+  }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,10 +38,21 @@ const CreateYourMess = () => {
     setShowModal(true);
   };
 
-  const handleConfirm = () => {
-    console.log({ messName, month, role });
-    setShowModal(false);
-    navigate("/dashboard");
+  const handleConfirm = async () => {
+    try {
+      const res = await API.post(
+        "/mess/create",
+        { name: messName, month, role },
+        { withCredentials: true }
+      );
+
+      console.log("Mess created:", res.data);
+      setShowModal(false);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Failed to create mess:", err);
+      toast.error("Something went wrong!");
+    }
   };
 
   const handleCancel = () => {
@@ -44,6 +73,13 @@ const CreateYourMess = () => {
     "November",
     "December",
   ];
+
+  if (loading)
+    return (
+      <div className="text-center p-10 text-emerald-600 text-lg">
+        Loading...
+      </div>
+    );
 
   return (
     <>
@@ -109,7 +145,7 @@ const CreateYourMess = () => {
         </form>
 
         {showModal && (
-          <div className="fixed inset-0  bg-emerald-50 bg-opacity-40 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-emerald-50 bg-opacity-40 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full space-y-4">
               <h3 className="text-lg font-semibold text-gray-800 text-center">
                 Are you sure you want to create this mess?

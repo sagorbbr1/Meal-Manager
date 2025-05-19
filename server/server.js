@@ -11,6 +11,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const messRoutes = require("./routes/mess");
 
 app.use(
   cors({
@@ -27,7 +28,9 @@ connectDB();
 app.get("/", (req, res) => {
   res.send("Meal App API running");
 });
+
 app.use("/api/auth", authRoutes);
+app.use("/api/mess", messRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
