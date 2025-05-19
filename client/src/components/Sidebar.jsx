@@ -44,7 +44,7 @@ const Sidebar = () => {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:static md:translate-x-0`}
       >
-        <div className="hidden md:flex items-center justify-between p-6 border-b">
+        <div className="hidden md:flex items-center justify-between p-3 border-b">
           <h2 className="text-2xl font-bold text-emerald-600">Meal Manager</h2>
         </div>
 

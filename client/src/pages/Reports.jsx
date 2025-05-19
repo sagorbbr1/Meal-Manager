@@ -39,12 +39,11 @@ const formatCurrency = (amount) => {
 const Reports = () => {
   return (
     <>
-      <HeaderNav />
-
       <div className="flex h-screen bg-emerald-50 overflow-hidden">
         <Sidebar />
 
         <div className="flex-1 flex flex-col overflow-auto">
+          <HeaderNav />
           <main className="p-6 max-w-7xl mx-auto space-y-8">
             <div>
               <h1 className="text-3xl font-bold text-emerald-700 mb-2">

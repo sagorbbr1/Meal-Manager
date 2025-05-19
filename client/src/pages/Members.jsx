@@ -30,12 +30,11 @@ const members = [
 const Members = () => {
   return (
     <>
-      <HeaderNav />
-
       <div className="flex h-screen bg-emerald-50 overflow-hidden">
         <Sidebar />
 
         <div className="flex-1 flex flex-col overflow-auto">
+          <HeaderNav />
           <main className="p-6 max-w-7xl mx-auto space-y-8">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>

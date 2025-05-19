@@ -2,6 +2,8 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
+import DashboardStats from "../components/DashboardStats";
+import MealDetails from "../components/MealDetails";
 
 const Dashboard = () => {
   const options = {
@@ -28,12 +30,11 @@ const Dashboard = () => {
 
   return (
     <>
-      <HeaderNav />
-
       <div className="flex h-screen bg-gradient-to-tr from-emerald-50 to-white overflow-hidden">
         <Sidebar />
 
         <div className="flex-1 flex flex-col overflow-auto">
+          <HeaderNav />
           <main className="p-4 sm:p-6 max-w-7xl mx-auto space-y-10">
             <div>
               <h1 className="text-3xl sm:text-4xl font-bold text-emerald-700 mb-1">
@@ -43,6 +44,8 @@ const Dashboard = () => {
                 Here's a quick overview of your mess data.
               </p>
             </div>
+
+            <DashboardStats />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {statCards.map((card, i) => (
@@ -63,6 +66,8 @@ const Dashboard = () => {
               <h2 className="text-lg font-medium text-emerald-600 mb-4">
                 Monthly Overview
               </h2>
+
+              <MealDetails />
               <div className="h-64 w-full flex items-center justify-center">
                 <ReactApexChart
                   options={options}
