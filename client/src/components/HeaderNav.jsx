@@ -10,7 +10,6 @@ const HeaderNav = () => {
         </div>
 
         <div className="flex gap-6 items-center">
-          <LayoutDashboard className="w-6 h-6 text-emerald-600 cursor-pointer" />
           <Bell className="w-6 h-6 text-gray-500 hover:text-emerald-600 cursor-pointer" />
           <Info className="w-6 h-6 text-gray-500 hover:text-emerald-600 cursor-pointer" />
           <UserCircle className="w-6 h-6 text-gray-500 hover:text-emerald-600 cursor-pointer" />

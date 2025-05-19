@@ -10,6 +10,11 @@ import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import Members from "./pages/Members";
 import Reports from "./pages/Reports";
+import AddMember from "./pages/AddMember";
+import AddMeal from "./pages/AddMeal";
+import AddDeposit from "./pages/AddDeposite";
+import AddCost from "./pages/AddCost";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -41,6 +46,48 @@ function App() {
             element={
               <ProtectedRoute>
                 <Reports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/add-member"
+            element={
+              <ProtectedRoute>
+                <AddMember />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/add-meal"
+            element={
+              <ProtectedRoute>
+                <AddMeal />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/add-deposite"
+            element={
+              <ProtectedRoute>
+                <AddDeposit />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/add-cost"
+            element={
+              <ProtectedRoute>
+                <AddCost />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
               </ProtectedRoute>
             }
           />
