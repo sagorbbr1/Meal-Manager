@@ -16,6 +16,8 @@ import AddDeposit from "./pages/AddDeposite";
 import AddCost from "./pages/AddCost";
 import Settings from "./pages/Settings";
 import CreateYourMess from "./pages/CreateYourMess";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 
 function App() {
   return (
@@ -98,6 +100,24 @@ function App() {
             element={
               <ProtectedRoute>
                 <CreateYourMess />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/edit-profile"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
               </ProtectedRoute>
             }
           />

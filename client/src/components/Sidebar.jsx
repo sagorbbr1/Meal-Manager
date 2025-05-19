@@ -12,8 +12,9 @@ import {
   X,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import API from "../../utils/axios";
+import API from "../utils/axios";
 import { useAuth } from "../context/AuthContext";
+import { handleLogout } from "../utils/logout";
 
 const Sidebar = () => {
   const { user, setUser } = useAuth();
@@ -32,10 +33,8 @@ const Sidebar = () => {
     { name: "Settings", icon: Settings, path: "/dashboard/settings" },
   ];
 
-  const handleLogout = async () => {
-    await API.post("/auth/logout", {}, { withCredentials: true });
-    setUser(null);
-    navigate("/login");
+  const logout = () => {
+    handleLogout(navigate, setUser);
   };
 
   return (
@@ -83,7 +82,7 @@ const Sidebar = () => {
             </Link>
           ))}
           <button
-            onClick={handleLogout}
+            onClick={logout}
             className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
           >
             <LogOut size={20} /> Logout
