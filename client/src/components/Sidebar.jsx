@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import {
   LayoutDashboard,
   Users,
+  UserPlus,
   FileText,
+  Utensils,
+  HandCoins,
   LogOut,
   Menu,
+  Settings,
   X,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +24,12 @@ const Sidebar = () => {
   const navLinks = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { name: "Members", icon: Users, path: "/dashboard/members" },
+    { name: "Add Member", icon: UserPlus, path: "/dashboard/add-member" },
+    { name: "Add Meal", icon: Utensils, path: "/dashboard/add-meal" },
+    { name: "Add Deposite", icon: FileText, path: "/dashboard/add-deposite" },
+    { name: "Add Cost", icon: HandCoins, path: "/dashboard/add-cost" },
     { name: "Reports", icon: FileText, path: "/dashboard/reports" },
+    { name: "Settings", icon: Settings, path: "/dashboard/settings" },
   ];
 
   const handleLogout = async () => {

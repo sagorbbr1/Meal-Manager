@@ -5,7 +5,9 @@ const HeaderNav = () => {
   return (
     <header className="w-full bg-emerald-50 shadow-sm z-20">
       <div className="hidden md:flex items-center justify-between px-6 py-4">
-        <div className="text-emerald-700 text-xl font-bold"></div>
+        <div className="text-emerald-700 text-xl font-bold">
+          <h2>Hello, Mr. Name</h2>
+        </div>
 
         <div className="flex gap-6 items-center">
           <LayoutDashboard className="w-6 h-6 text-emerald-600 cursor-pointer" />
