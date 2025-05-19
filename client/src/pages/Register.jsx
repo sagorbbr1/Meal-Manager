@@ -39,7 +39,7 @@ const RegisterPage = () => {
 
       toast.success("Registration successful!");
       setUser(res.data.user);
-      navigate("/dashboard");
+      navigate("/create-your-mess");
     } catch (err) {
       console.error("Register error:", err);
       toast.error(err?.response?.data?.msg || "Something went wrong.");

@@ -30,7 +30,7 @@ const LoginPage = () => {
       toast.success("Login successful!");
 
       setUser(res.data.user);
-      navigate("/dashboard");
+      navigate("/create-your-mess");
     } catch (error) {
       console.error("Login error:", error);
       toast.error(error?.response?.data?.msg || "Something went wrong.");

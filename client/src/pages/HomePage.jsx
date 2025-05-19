@@ -13,7 +13,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (!authLoading && user) {
-      navigate("/dashboard");
+      navigate("/create-your-mess");
     }
   }, [authLoading, user, navigate]);
 

@@ -16,10 +16,10 @@ const Dashboard = () => {
         <div className="flex-1 flex flex-col overflow-auto">
           <HeaderNav />
           <main className="p-4 sm:p-6 max-w-7xl mx-auto space-y-10">
+            <h2 className="text-lg font-medium text-emerald-600 mb-4">
+              Monthly Overview
+            </h2>
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-emerald-700 mb-1">
-                Dashboard
-              </h1>
               <p className="text-gray-600">
                 Here's a quick overview of your mess data.
               </p>
@@ -31,10 +31,6 @@ const Dashboard = () => {
             <MyMealInfo />
 
             <div className="bg-white rounded-xl shadow p-6">
-              <h2 className="text-lg font-medium text-emerald-600 mb-4">
-                Monthly Overview
-              </h2>
-
               <MealDetails />
               <div className="h-64 w-full flex items-center justify-center">
                 <Chart />

@@ -15,6 +15,7 @@ import AddMeal from "./pages/AddMeal";
 import AddDeposit from "./pages/AddDeposite";
 import AddCost from "./pages/AddCost";
 import Settings from "./pages/Settings";
+import CreateYourMess from "./pages/CreateYourMess";
 
 function App() {
   return (
@@ -88,6 +89,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/create-your-mess"
+            element={
+              <ProtectedRoute>
+                <CreateYourMess />
               </ProtectedRoute>
             }
           />
