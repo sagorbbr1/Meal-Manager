@@ -21,8 +21,19 @@ router.post("/create", verifyToken, async (req, res) => {
   }
 });
 router.get("/mine", verifyToken, async (req, res) => {
-  const mess = await Mess.findOne({ createdBy: req.user.id });
-  res.json({ mess });
+  try {
+    const mess = await Mess.findOne({ createdBy: req.user.id }).populate(
+      "members",
+      "name email avatar"
+    );
+
+    if (!mess) return res.status(404).json({ msg: "Mess not found" });
+
+    res.json({ mess, members: mess.members });
+  } catch (err) {
+    console.error("Mess fetch error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 
 module.exports = router;

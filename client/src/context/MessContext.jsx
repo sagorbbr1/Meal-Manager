@@ -16,7 +16,7 @@ export const MessProvider = ({ children }) => {
         if (user) {
           const res = await API.get("/mess/mine", { withCredentials: true });
           setMess(res.data.mess);
-          setMembers(res.data.members);
+          if (res.data.members) setMembers(res.data.members);
         }
       } catch (err) {
         console.error("MessContext error:", err);

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HeaderNav from "../components/HeaderNav";
 import { toast, ToastContainer } from "react-toastify";
 import API from "../utils/axios";
+import Spinner from "../components/Spinner";
 
 const CreateYourMess = () => {
   const [messName, setMessName] = useState("");
@@ -74,12 +75,7 @@ const CreateYourMess = () => {
     "December",
   ];
 
-  if (loading)
-    return (
-      <div className="text-center p-10 text-emerald-600 text-lg">
-        Loading...
-      </div>
-    );
+  if (loading) return <Spinner authLoading={loading} />;
 
   return (
     <>

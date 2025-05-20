@@ -8,13 +8,13 @@ import Spinner from "../components/Spinner";
 
 const Profile = () => {
   const { user, setUser, authLoading } = useAuth();
-  const { mess, members, messLoading } = useMess();
+  const { mess, messLoading } = useMess();
   const navigate = useNavigate();
 
   if (authLoading)
     return (
       <>
-        <Spinner authLoading={authLoading} />
+        <Spinner authLoading={messLoading} />
       </>
     );
 
@@ -24,7 +24,6 @@ const Profile = () => {
     handleLogout(navigate, setUser);
   };
 
-  console.log(user);
   return (
     <>
       <HeaderNav />
@@ -48,7 +47,7 @@ const Profile = () => {
             <div className="flex justify-between">
               <span className="text-gray-600 font-medium">Joined:</span>
               <span className="text-gray-800">
-                {new Date(user.createdAt).toLocaleString("en-GB", {
+                {new Date(user?.createdAt).toLocaleString("en-GB", {
                   day: "2-digit",
                   month: "short",
                   year: "numeric",
