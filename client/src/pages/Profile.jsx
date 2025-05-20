@@ -2,24 +2,29 @@ import React from "react";
 import HeaderNav from "../components/HeaderNav";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useMess } from "../context/MessContext";
 import { handleLogout } from "../utils/logout";
-
-const userInfo = {
-  name: "Mohammad Sagor",
-  email: "sagor@example.com",
-  role: "Manager",
-  joined: "2024-11-01",
-  mess: "MealManager.com",
-};
+import Spinner from "../components/Spinner";
 
 const Profile = () => {
-  const { user, setUser } = useAuth();
+  const { user, setUser, authLoading } = useAuth();
+  const { mess, members, messLoading } = useMess();
   const navigate = useNavigate();
+
+  if (authLoading)
+    return (
+      <>
+        <Spinner authLoading={authLoading} />
+      </>
+    );
+
+  if (!user) return <p className="text-center text-red-500">Not logged in</p>;
 
   const logout = () => {
     handleLogout(navigate, setUser);
   };
 
+  console.log(user);
   return (
     <>
       <HeaderNav />
@@ -32,21 +37,29 @@ const Profile = () => {
               className="w-24 h-24 rounded-full mb-4"
             />
             <h2 className="text-2xl font-bold text-emerald-700">{user.name}</h2>
-            <p className="text-gray-500 text-sm">{userInfo.email}</p>
+            <p className="text-gray-500 text-sm">{user.email}</p>
           </div>
 
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600 font-medium">Role:</span>
-              <span className="text-gray-800">{userInfo.role}</span>
+              <span className="text-gray-800">{user.role}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600 font-medium">Joined:</span>
-              <span className="text-gray-800">{userInfo.joined}</span>
+              <span className="text-gray-800">
+                {new Date(user.createdAt).toLocaleString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600 font-medium">Mess:</span>
-              <span className="text-gray-800">{userInfo.mess}</span>
+              <span className="text-gray-800">{mess?.name}</span>
             </div>
           </div>
 

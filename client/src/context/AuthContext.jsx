@@ -21,7 +21,6 @@ export const AuthProvider = ({ children }) => {
 
     checkAuth();
   }, []);
-
   return (
     <AuthContext.Provider value={{ user, setUser, authLoading }}>
       {children}

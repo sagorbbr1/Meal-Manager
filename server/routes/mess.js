@@ -5,28 +5,21 @@ const verifyToken = require("../middlewares/authMiddleware");
 
 router.post("/create", verifyToken, async (req, res) => {
   try {
-    const { name, month, role } = req.body;
+    const { name, month } = req.body;
 
-    if (!name || !month || !role) {
-      return res.status(400).json({ error: "All fields are required" });
-    }
-
-    const mess = new Mess({
+    const newMess = new Mess({
       name,
       month,
-      role,
-      createdBy: req.user.id, // user comes from verifyToken middleware
+      createdBy: req.user.id,
     });
 
-    await mess.save();
-
-    res.status(201).json({ message: "Mess created", mess });
-  } catch (error) {
-    console.error("Mess create error:", error);
-    res.status(500).json({ error: "Something went wrong" });
+    await newMess.save();
+    res.status(201).json({ message: "Mess created", mess: newMess });
+  } catch (err) {
+    console.error("Mess create error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
-
 router.get("/mine", verifyToken, async (req, res) => {
   const mess = await Mess.findOne({ createdBy: req.user.id });
   res.json({ mess });

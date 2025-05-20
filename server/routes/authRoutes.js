@@ -25,14 +25,21 @@ router.post("/register", async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: false,
+        secure: false, // Set to true in production (with HTTPS)
         sameSite: "Lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       })
       .status(201)
       .json({
         msg: "User registered",
-        user: { name: newUser.name, email: newUser.email },
+        user: {
+          _id: newUser._id,
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.role,
+          mess: newUser.mess,
+          joined: newUser.createdAt,
+        },
       });
   } catch (err) {
     console.error(err);
@@ -62,7 +69,17 @@ router.post("/login", async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .status(200)
-      .json({ msg: "Logged in", user: { name: user.name, email: user.email } });
+      .json({
+        msg: "Logged in",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          mess: user.mess,
+          joined: user.createdAt,
+        },
+      });
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
@@ -75,7 +92,11 @@ router.get("/user", verifyToken, async (req, res) => {
     if (!token) return res.status(401).json({ message: "Not authenticated" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("-password");
+
+    const user = await User.findById(decoded.id)
+      .select("-password")
+      .populate("mess", "name");
+
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({ user });
