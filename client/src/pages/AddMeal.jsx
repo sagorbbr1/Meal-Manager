@@ -3,6 +3,7 @@ import { Plus, Minus } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
 import API from "../utils/axios";
+import Spinner from "../components/Spinner";
 
 const AddMeal = () => {
   const [users, setUsers] = useState([]);
@@ -27,10 +28,21 @@ const AddMeal = () => {
   }, []);
 
   const updateMealCount = async (userId, delta) => {
+    if (delta !== 1 && delta !== -1) {
+      alert("Invalid meal count change");
+      return;
+    }
+
     try {
       const res = await API.patch(`/users/${userId}/meal`, { delta });
+      if (res.status !== 200) {
+        alert("Failed to update meal count");
+        return;
+      }
       setUsers((prev) =>
-        prev.map((user) => (user._id === userId ? res.data : user))
+        prev.map((user) =>
+          user.id === userId ? { ...user, mealStats: res.data.mealStats } : user
+        )
       );
     } catch (error) {
       console.error(
@@ -41,9 +53,9 @@ const AddMeal = () => {
     }
   };
 
-  if (loading)
-    return <p className="p-6 text-center text-gray-600">Loading users...</p>;
+  if (loading) return <Spinner authLoading={loading} />;
 
+  console.log("Users:", users);
   return (
     <div className="flex h-screen bg-emerald-50 overflow-hidden">
       <Sidebar />
@@ -70,23 +82,24 @@ const AddMeal = () => {
                     alt={`${user.name} avatar`}
                     className="w-12 h-12 rounded-full object-cover border border-emerald-300"
                   />
-                  <p className="font-semibold text-lg text-gray-800 truncate max-w-xs mr-1">
+                  <p className="font-semibold text-lg text-gray-800 truncate max-w-xs">
                     {user.name}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
                   <button
-                    onClick={() => updateMealCount(user._id, -1)}
-                    className="p-2 bg-red-200 rounded hover:bg-red-300"
+                    onClick={() => updateMealCount(user.id, -1)}
+                    className="p-2 bg-red-200 rounded hover:bg-red-300 ml-1"
                     aria-label={`Decrease meal count for ${user.name}`}
                   >
                     <Minus size={18} color="#b91c1c" />
                   </button>
-                  <span className="font-mono text-lg">
-                    {user.mealStats?.totalMeal ?? 0}
+                  <span className="font-mono text-lg bg-emerald-100 text-emerald-800 px-2 py-1 rounded">
+                    {(user.mealStats?.totalMeal ?? 0).toFixed(2)}
                   </span>
+
                   <button
-                    onClick={() => updateMealCount(user._id, 1)}
+                    onClick={() => updateMealCount(user.id, 1)}
                     className="p-2 bg-green-200 rounded hover:bg-green-300"
                     aria-label={`Increase meal count for ${user.name}`}
                   >

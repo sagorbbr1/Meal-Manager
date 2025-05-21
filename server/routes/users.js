@@ -2,6 +2,7 @@ const express = require("express");
 const verifyToken = require("../middlewares/authMiddleware");
 const User = require("../models/User");
 const router = express.Router();
+const mongoose = require("mongoose");
 
 router.post("/add-member", verifyToken, async (req, res) => {
   const managerId = req.user.id;
@@ -41,7 +42,7 @@ router.get("/my-members", verifyToken, async (req, res) => {
     }
 
     const members = await User.find({ mess: currentUser.mess }).select(
-      "name email createdAt"
+      "name email createdAt mealStats"
     );
 
     const formattedMembers = members.map((member) => ({
@@ -50,6 +51,7 @@ router.get("/my-members", verifyToken, async (req, res) => {
       email: member.email,
       joined: member.createdAt,
       avatar: `https://i.pravatar.cc/150?u=${member._id}`,
+      mealStats: member.mealStats ?? { totalMeal: 0 },
     }));
 
     res.json({ members: formattedMembers });
@@ -58,4 +60,36 @@ router.get("/my-members", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.patch("/:userId/meal", verifyToken, async (req, res) => {
+  const { userId } = req.params;
+  const { delta } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid userId format" });
+  }
+
+  if (typeof delta !== "number") {
+    return res.status(400).json({ message: "Invalid delta value" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.mealStats.totalMeal = Math.max(
+      0,
+      (user.mealStats.totalMeal || 0) + delta
+    );
+
+    await user.save();
+
+    // 👇 Only return the updated meal stats
+    res.json({ mealStats: user.mealStats });
+  } catch (err) {
+    console.error("Error updating meal count:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;

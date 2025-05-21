@@ -22,7 +22,6 @@ const Dashboard = () => {
     fetchMembers();
   }, []);
 
-  console.log("Members:", members);
   return (
     <>
       <div className="flex h-screen bg-gradient-to-tr from-emerald-50 to-white overflow-hidden">
