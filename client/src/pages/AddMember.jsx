@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
+import API from "../utils/axios";
 
 const AddMember = () => {
   const [formData, setFormData] = useState({
@@ -16,12 +17,30 @@ const AddMember = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("New Member Added:", formData);
+    if (!formData.name || !formData.email || !formData.joined) {
+      alert("All fields are required!");
+      return;
+    }
 
-    setFormData({ name: "", email: "", joined: "" });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Invalid email format!");
+      return;
+    }
+
+    try {
+      const response = await API.post("/users/add-member", formData);
+      console.log("User saved:", response.data);
+      setFormData({ name: "", email: "", joined: "" });
+    } catch (error) {
+      console.error(
+        "Error saving user:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   return (
