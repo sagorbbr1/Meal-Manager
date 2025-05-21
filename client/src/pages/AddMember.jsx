@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
 import API from "../utils/axios";
+import { toast, ToastContainer } from "react-toastify";
 
 const AddMember = () => {
   const [formData, setFormData] = useState({
@@ -21,19 +22,23 @@ const AddMember = () => {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.joined) {
-      alert("All fields are required!");
+      toast.info("All fields are required!");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      alert("Invalid email format!");
+      toast.error("Invalid email format!");
       return;
     }
 
     try {
       const response = await API.post("/users/add-member", formData);
-      console.log("User saved:", response.data);
+      if (response.status === 201) {
+        toast.success("Member added successfully!");
+      } else {
+        toast.error("Failed to add member.");
+      }
       setFormData({ name: "", email: "", joined: "" });
     } catch (error) {
       console.error(
@@ -46,6 +51,7 @@ const AddMember = () => {
   return (
     <div className="flex h-screen bg-emerald-50 overflow-hidden">
       <Sidebar />
+      <ToastContainer />
 
       <div className="flex-1 flex flex-col overflow-auto">
         <HeaderNav />
