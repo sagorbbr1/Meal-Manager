@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
 import DashboardStats from "../components/DashboardStats";
@@ -7,9 +7,22 @@ import Chart from "../components/Chart";
 import MealStats from "../components/MealStats";
 import MyMealInfo from "../components/MyMealInfo";
 import { useMess } from "../context/MessContext";
+import API from "../utils/axios";
 
 const Dashboard = () => {
   const { mess } = useMess();
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      const res = await API.get("/users/my-members", { withCredentials: true });
+      setMembers(res.data.members);
+    };
+
+    fetchMembers();
+  }, []);
+
+  console.log("Members:", members);
   return (
     <>
       <div className="flex h-screen bg-gradient-to-tr from-emerald-50 to-white overflow-hidden">
@@ -33,7 +46,7 @@ const Dashboard = () => {
             <MyMealInfo />
 
             <div className="bg-white rounded-xl shadow p-6">
-              <MealDetails />
+              <MealDetails members={members} />
               <div className="h-64 w-full flex items-center justify-center">
                 <Chart />
               </div>

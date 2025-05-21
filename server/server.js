@@ -12,6 +12,7 @@ const path = require("path");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const messRoutes = require("./routes/mess");
+const userRoutes = require("./routes/users");
 
 app.use(
   cors({
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/mess", messRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

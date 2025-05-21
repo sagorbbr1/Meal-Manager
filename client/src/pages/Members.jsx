@@ -1,54 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import { Pencil, Trash2, Plus } from "lucide-react";
 import HeaderNav from "../components/HeaderNav";
-
-const members = [
-  {
-    id: 1,
-    name: "Rakib Hossain",
-    email: "rakib@example.com",
-    joined: "2024-11-01",
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-  {
-    id: 2,
-    name: "Jannat Akter",
-    email: "jannat@example.com",
-    joined: "2024-12-15",
-    avatar: "https://i.pravatar.cc/150?img=2",
-  },
-  {
-    id: 3,
-    name: "Shuvo Das",
-    email: "shuvo@example.com",
-    joined: "2025-01-20",
-    avatar: "https://i.pravatar.cc/150?img=3",
-  },
-];
+import { Pencil, Trash2, Plus } from "lucide-react";
+import API from "../utils/axios";
 
 const Members = () => {
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const res = await API.get("/users/my-members", {
+          withCredentials: true,
+        });
+        setMembers(res.data.members);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to fetch members.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, []);
+
   return (
-    <>
-      <div className="flex h-screen bg-emerald-50 overflow-hidden">
-        <Sidebar />
+    <div className="flex h-screen bg-emerald-50 overflow-hidden">
+      <Sidebar />
 
-        <div className="flex-1 flex flex-col overflow-auto">
-          <HeaderNav />
-          <main className="p-6 max-w-7xl mx-auto space-y-8">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <h1 className="text-3xl font-bold text-emerald-700">Members</h1>
-                <p className="text-gray-600">
-                  All registered members are here.
-                </p>
-              </div>
-              <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow-md transition">
-                <Plus size={18} />
-                Add Member
-              </button>
+      <div className="flex-1 flex flex-col overflow-auto">
+        <HeaderNav />
+        <main className="p-6 max-w-7xl mx-auto space-y-8">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-emerald-700">Members</h1>
+              <p className="text-gray-600">All registered members are here.</p>
             </div>
+            <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow-md transition">
+              <Plus size={18} />
+              Add Member
+            </button>
+          </div>
 
+          {loading ? (
+            <p>Loading members...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {members.map((member) => (
                 <div
@@ -83,10 +84,10 @@ const Members = () => {
                 </div>
               ))}
             </div>
-          </main>
-        </div>
+          )}
+        </main>
       </div>
-    </>
+    </div>
   );
 };
 

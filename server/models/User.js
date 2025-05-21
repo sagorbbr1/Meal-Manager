@@ -9,7 +9,19 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Mess",
     },
-    role: { type: String, enum: ["manager", "member"], default: "member" },
+    role: {
+      type: String,
+      enum: ["manager", "member"],
+      default: "member",
+    },
+
+    mealStats: {
+      totalMeal: { type: Number, default: 0 },
+      totalDeposit: { type: Number, default: 0 },
+      mealCost: { type: Number, default: 0 },
+      totalCost: { type: Number, default: 0 },
+      balance: { type: Number, default: 0 },
+    },
   },
   { timestamps: true }
 );
