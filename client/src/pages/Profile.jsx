@@ -26,7 +26,7 @@ const Profile = () => {
 
   return (
     <>
-      <HeaderNav />
+      <HeaderNav mess={mess} />
       <div className="min-h-screen bg-emerald-50 flex items-center justify-center px-4 py-10">
         <div className="bg-white shadow-xl rounded-xl max-w-md w-full p-8 space-y-6">
           <div className="flex flex-col items-center">
@@ -47,13 +47,14 @@ const Profile = () => {
             <div className="flex justify-between">
               <span className="text-gray-600 font-medium">Joined:</span>
               <span className="text-gray-800">
-                {new Date(user?.createdAt).toLocaleString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {user?.createdAt &&
+                  new Date(user.createdAt).toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
               </span>
             </div>
             <div className="flex justify-between">

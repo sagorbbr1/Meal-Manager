@@ -106,6 +106,34 @@ router.get("/user", verifyToken, async (req, res) => {
   }
 });
 
+router.put("/update", verifyToken, async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ message: "Name and email are required." });
+    }
+
+    const updates = { name, email };
+
+    if (password) {
+      const hashed = await bcrypt.hash(password, 10);
+      updates.password = hashed;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updates },
+      { new: true }
+    ).select("-password");
+
+    res.json({ user: updatedUser });
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ message: "Failed to update user" });
+  }
+});
+
 router.post("/logout", verifyToken, (req, res) => {
   res.clearCookie("token").json({ message: "Logged out" });
 });

@@ -3,9 +3,11 @@ import { Bell, Info, UserCircle, LayoutDashboard } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
-const HeaderNav = () => {
+const HeaderNav = ({ mess = name }) => {
   const { user } = useAuth();
+
   const navigate = useNavigate();
+
   return (
     <header className="w-full bg-emerald-50 shadow-sm z-20">
       <div className="hidden md:flex items-center justify-between px-6 py-4">
@@ -14,7 +16,7 @@ const HeaderNav = () => {
         </div>
 
         <div className="flex gap-6 items-center">
-          {!user && (
+          {mess && (
             <LayoutDashboard
               onClick={() => navigate("/dashboard")}
               className="w-6 h-6 text-emerald-600 cursor-pointer"

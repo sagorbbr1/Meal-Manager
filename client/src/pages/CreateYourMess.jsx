@@ -49,6 +49,7 @@ const CreateYourMess = () => {
 
       console.log("Mess created:", res.data);
       setShowModal(false);
+      toast.success("Mess created successfully!");
       navigate("/dashboard");
     } catch (err) {
       console.error("Failed to create mess:", err);

@@ -1,28 +1,59 @@
 import React, { useState } from "react";
 import HeaderNav from "../components/HeaderNav";
+import API from "../utils/axios";
+import { useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { ToastContainer, toast } from "react-toastify";
+import { useMess } from "../context/MessContext";
 
 const EditProfile = () => {
+  const { user } = useAuth();
+  const { mess } = useMess();
   const [formData, setFormData] = useState({
-    name: "Mohammad Sagor",
-    email: "sagor@example.com",
+    name: "",
+    email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        email: user.email || "",
+        password: "",
+      });
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
 
-    console.log("Updated info:", formData);
-    alert("Profile updated successfully 🚀");
+    try {
+      const res = await API.put("/auth/update", formData, {
+        withCredentials: true,
+      });
+
+      if (res.data.user) {
+        toast.success("Profile updated successfully!");
+        window.location.reload();
+      } else {
+        toast.error("Failed to update profile");
+      }
+    } catch (err) {
+      console.error("Profile update failed:", err);
+      alert("Something went wrong 😓");
+    }
   };
 
   return (
     <>
-      <HeaderNav />
+      <ToastContainer />
+      <HeaderNav mess={mess} />
 
       <div className="min-h-screen bg-emerald-50 flex items-center justify-center px-4 py-10">
         <form

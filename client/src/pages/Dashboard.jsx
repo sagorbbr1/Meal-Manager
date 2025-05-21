@@ -6,15 +6,17 @@ import MealDetails from "../components/MealDetails";
 import Chart from "../components/Chart";
 import MealStats from "../components/MealStats";
 import MyMealInfo from "../components/MyMealInfo";
+import { useMess } from "../context/MessContext";
 
 const Dashboard = () => {
+  const { mess } = useMess();
   return (
     <>
       <div className="flex h-screen bg-gradient-to-tr from-emerald-50 to-white overflow-hidden">
         <Sidebar />
 
         <div className="flex-1 flex flex-col overflow-auto">
-          <HeaderNav />
+          <HeaderNav mess={mess} />
           <main className="p-4 sm:p-6 max-w-7xl mx-auto space-y-10">
             <h2 className="text-lg font-medium text-emerald-600 mb-4">
               Monthly Overview
