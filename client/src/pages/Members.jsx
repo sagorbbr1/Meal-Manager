@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import API from "../utils/axios";
+import Spinner from "../components/Spinner";
 
 const Members = () => {
   const [members, setMembers] = useState([]);
@@ -46,7 +47,7 @@ const Members = () => {
           </div>
 
           {loading ? (
-            <p>Loading members...</p>
+            <Spinner authLoading={loading} />
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (

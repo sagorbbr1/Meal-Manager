@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
+import API from "../utils/axios";
+import Spinner from "../components/Spinner";
+import { toast, ToastContainer } from "react-toastify";
+``;
 
 const AddDeposit = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +14,25 @@ const AddDeposit = () => {
     note: "",
   });
 
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const res = await API.get("/users/my-members");
+        setMembers(res.data.members || []);
+      } catch (err) {
+        console.error("Error fetching members:", err);
+        alert("Could not load members.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, []);
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -17,17 +40,34 @@ const AddDeposit = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Deposit added:", formData);
 
-    setFormData({ member: "", date: "", amount: "", note: "" });
+    try {
+      const payload = {
+        ...formData,
+        amount: parseFloat(formData.amount),
+      };
+
+      const res = await API.post("/deposit/add-deposit", payload);
+      console.log("Deposit response:", res);
+
+      toast.success("Deposit added successfully!");
+      setFormData({ member: "", date: "", amount: "", note: "" });
+    } catch (error) {
+      toast.error(
+        "Error adding deposit:",
+        error.response?.data || error.message
+      );
+      toast.error("Failed to add deposit. Please try again.");
+    }
   };
+  if (loading) return <Spinner />;
 
   return (
     <div className="flex h-screen bg-emerald-50 overflow-hidden">
       <Sidebar />
-
+      <ToastContainer />
       <div className="flex-1 flex flex-col overflow-auto">
         <HeaderNav />
         <main className="p-6 max-w-4xl mx-auto space-y-8">
@@ -45,20 +85,28 @@ const AddDeposit = () => {
             className="bg-white shadow rounded-xl p-6 space-y-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Member Dropdown */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Member Name
+                  Select Member
                 </label>
-                <input
-                  type="text"
+                <select
                   name="member"
                   value={formData.member}
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
+                >
+                  <option value="">-- Select Member --</option>
+                  {members.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
+              {/* Date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Date
@@ -73,6 +121,7 @@ const AddDeposit = () => {
                 />
               </div>
 
+              {/* Amount */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Amount (৳)
@@ -88,6 +137,7 @@ const AddDeposit = () => {
                 />
               </div>
 
+              {/* Notes */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Notes (optional)

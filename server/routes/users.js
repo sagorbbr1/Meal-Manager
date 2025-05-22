@@ -84,7 +84,6 @@ router.patch("/:userId/meal", verifyToken, async (req, res) => {
 
     await user.save();
 
-    // 👇 Only return the updated meal stats
     res.json({ mealStats: user.mealStats });
   } catch (err) {
     console.error("Error updating meal count:", err);
@@ -97,17 +96,23 @@ router.get("/my-stats", verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const { totalMeal = 0 } = user.mealStats || {};
-    const { totalDeposit = 0 } = user.financeStats || {};
-    const cost = user.mealStats?.totalMealCost || 0;
+    const {
+      totalMeal = 0,
+      totalDeposit = 0,
+      totalCost = 0,
+    } = user.mealStats || {};
 
-    const balance = totalDeposit - cost;
+    const meal = Number(totalMeal) || 0;
+    const deposit = Number(totalDeposit) || 0;
+    const cost = Number(totalCost) || 0;
+
+    const balance = deposit - cost;
 
     res.json({
-      totalMeal,
-      deposit: totalDeposit,
-      cost,
-      balance,
+      totalMeal: meal,
+      totalDeposit: deposit,
+      totalCost: cost,
+      balance: isNaN(balance) ? 0 : balance,
     });
   } catch (err) {
     console.error("Error fetching user stats:", err);

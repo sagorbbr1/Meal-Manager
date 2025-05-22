@@ -4,24 +4,6 @@ const Mess = require("../models/Mess");
 const verifyToken = require("../middlewares/authMiddleware");
 const User = require("../models/User");
 
-// router.post("/create", verifyToken, async (req, res) => {
-//   try {
-//     const { name, month } = req.body;
-
-//     const newMess = new Mess({
-//       name,
-//       month,
-//       createdBy: req.user.id,
-//     });
-
-//     await newMess.save();
-//     res.status(201).json({ message: "Mess created", mess: newMess });
-//   } catch (err) {
-//     console.error("Mess create error:", err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
-
 router.post("/create", verifyToken, async (req, res) => {
   const userId = req.user.id;
   const { name, month } = req.body;

@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
 import API from "../utils/axios";
 import Spinner from "../components/Spinner";
+import { ToastContainer, toast } from "react-toastify";
 
 const AddMeal = () => {
   const [users, setUsers] = useState([]);
@@ -29,27 +30,28 @@ const AddMeal = () => {
 
   const updateMealCount = async (userId, delta) => {
     if (delta !== 1 && delta !== -1) {
-      alert("Invalid meal count change");
+      toast.error("Invalid meal count change");
       return;
     }
 
     try {
       const res = await API.patch(`/users/${userId}/meal`, { delta });
       if (res.status !== 200) {
-        alert("Failed to update meal count");
+        toast.error("Failed to update meal count");
         return;
       }
+      toast.success("Meal count updated successfully");
       setUsers((prev) =>
         prev.map((user) =>
           user.id === userId ? { ...user, mealStats: res.data.mealStats } : user
         )
       );
     } catch (error) {
-      console.error(
+      toast.error(
         "Failed to update meal count:",
         error.response?.data || error.message
       );
-      alert("Could not update meal count");
+      toast.error("Could not update meal count");
     }
   };
 
@@ -59,6 +61,8 @@ const AddMeal = () => {
   return (
     <div className="flex h-screen bg-emerald-50 overflow-hidden">
       <Sidebar />
+
+      <ToastContainer />
       <div className="flex-1 flex flex-col overflow-auto">
         <HeaderNav />
         <main className="p-6 max-w-4xl mx-auto space-y-8">
