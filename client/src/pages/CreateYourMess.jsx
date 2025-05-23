@@ -47,7 +47,6 @@ const CreateYourMess = () => {
         { withCredentials: true }
       );
 
-      console.log("Mess created:", res.data);
       setShowModal(false);
       toast.success("Mess created successfully!");
       navigate("/dashboard");

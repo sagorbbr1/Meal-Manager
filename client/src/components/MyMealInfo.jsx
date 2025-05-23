@@ -16,6 +16,7 @@ const MyMealInfo = () => {
           "Failed to load meal stats:",
           error.response?.data || error.message
         );
+        setStats(null);
       } finally {
         setLoading(false);
       }
@@ -24,17 +25,34 @@ const MyMealInfo = () => {
     fetchStats();
   }, []);
 
-  console.log("MyMealInfo stats:", stats);
   if (loading) return <Spinner />;
   if (!stats)
-    return <p className="text-center text-red-500">Failed to load data.</p>;
+    return (
+      <p className="text-center text-red-500 font-medium">
+        Failed to load data.
+      </p>
+    );
+
+  // Safe fallback to 0 if any field is missing or not a number
+  const safeNum = (num) => {
+    const n = Number(num);
+    return isNaN(n) ? 0 : n;
+  };
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <StatCard label="My Total Meal" value={stats.totalMeal} suffix="" />
-      <StatCard label="My Deposit" value={stats.totalDeposit} suffix="৳" />
-      <StatCard label="My Cost" value={stats.totalCost} suffix="৳" />
-      <StatCard label="My Balance" value={stats.balance} suffix="৳" />
+      <StatCard
+        label="My Total Meal"
+        value={safeNum(stats.totalMeal)}
+        suffix=""
+      />
+      <StatCard
+        label="My Deposit"
+        value={safeNum(stats.totalDeposit)}
+        suffix="৳"
+      />
+      <StatCard label="My Cost" value={safeNum(stats.totalCost)} suffix="৳" />
+      <StatCard label="My Balance" value={safeNum(stats.balance)} suffix="৳" />
     </div>
   );
 };
@@ -42,7 +60,7 @@ const MyMealInfo = () => {
 const StatCard = ({ label, value, suffix }) => (
   <div className="bg-white rounded-2xl shadow p-4 text-center">
     <p className="text-2xl font-semibold text-emerald-600">
-      {(Number(value) || 0).toFixed(2)} {suffix}
+      {value.toFixed(2)} {suffix}
     </p>
     <p className="text-sm text-gray-500 mt-1">{label}</p>
   </div>

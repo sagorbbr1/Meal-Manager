@@ -19,7 +19,6 @@ const userSchema = new mongoose.Schema(
       totalMeal: { type: Number, default: 0 },
       totalDeposit: { type: Number, default: 0 },
       mealCost: { type: Number, default: 0 },
-      totalCost: { type: Number, default: 0 },
       balance: { type: Number, default: 0 },
     },
   },

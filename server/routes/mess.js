@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const Mess = require("../models/Mess");
-const verifyToken = require("../middlewares/authMiddleware");
+const Cost = require("../models/Cost");
+const Deposit = require("../models/Deposit");
 const User = require("../models/User");
+const verifyToken = require("../middlewares/authMiddleware");
+const Mess = require("../models/Mess");
 
 router.post("/create", verifyToken, async (req, res) => {
   const userId = req.user.id;
@@ -37,6 +39,52 @@ router.get("/mine", verifyToken, async (req, res) => {
   } catch (err) {
     console.error("Mess fetch error:", err);
     res.status(500).json({ msg: "Server error" });
+  }
+});
+
+router.get("/stats", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    const messId = user?.mess;
+
+    if (!messId) {
+      return res.status(400).json({ error: "Mess ID is required" });
+    }
+
+    const totalCostResult = await Cost.aggregate([
+      { $match: { mess: messId } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+    const totalCost = totalCostResult[0]?.total || 0;
+
+    const totalDepositResult = await Deposit.aggregate([
+      { $match: { mess: messId } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+    const totalDeposit = totalDepositResult[0]?.total || 0;
+
+    const users = await User.find({ mess: messId });
+    const totalMeal = users.reduce(
+      (acc, user) => acc + (user.mealStats?.totalMeal || 0),
+      0
+    );
+
+    const mealRate = totalMeal > 0 ? totalCost / totalMeal : 0;
+
+    const messBalance = totalDeposit - totalCost;
+
+    res.json({
+      totalCost,
+      totalDeposit,
+      totalMeal,
+      messBalance,
+      mealRate,
+    });
+  } catch (err) {
+    console.error("Dashboard stats error:", err);
+    res.status(500).json({ error: "Failed to load dashboard stats" });
   }
 });
 

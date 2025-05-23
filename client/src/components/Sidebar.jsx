@@ -8,6 +8,7 @@ import {
   HandCoins,
   LogOut,
   Menu,
+  CircleDollarSign,
   Settings,
   X,
 } from "lucide-react";
@@ -29,6 +30,7 @@ const Sidebar = () => {
     { name: "Add Meal", icon: Utensils, path: "/dashboard/add-meal" },
     { name: "Add Deposite", icon: FileText, path: "/dashboard/add-deposite" },
     { name: "Add Cost", icon: HandCoins, path: "/dashboard/add-cost" },
+    { name: "Cost List", icon: CircleDollarSign, path: "/dashboard/all-costs" },
     { name: "Reports", icon: FileText, path: "/dashboard/reports" },
     { name: "Settings", icon: Settings, path: "/dashboard/settings" },
   ];

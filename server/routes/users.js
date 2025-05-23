@@ -1,6 +1,7 @@
 const express = require("express");
 const verifyToken = require("../middlewares/authMiddleware");
 const User = require("../models/User");
+const Cost = require("../models/Cost");
 const router = express.Router();
 const mongoose = require("mongoose");
 
@@ -33,28 +34,50 @@ router.post("/add-member", verifyToken, async (req, res) => {
 
   res.status(201).json({ message: "Member added", user: newUser });
 });
-
 router.get("/my-members", verifyToken, async (req, res) => {
   try {
     const currentUser = await User.findById(req.user.id);
     if (!currentUser || !currentUser.mess) {
-      return res.status(403).json({ message: "No mess found for this user" });
+      return res
+        .status(403)
+        .json({ message: "User does not belong to any mess" });
     }
 
-    const members = await User.find({ mess: currentUser.mess }).select(
-      "name email createdAt mealStats"
-    );
+    const members = await User.find({ mess: currentUser.mess });
 
-    const formattedMembers = members.map((member) => ({
-      id: member._id,
-      name: member.name,
-      email: member.email,
-      joined: member.createdAt,
-      avatar: `https://i.pravatar.cc/150?u=${member._id}`,
-      mealStats: member.mealStats ?? { totalMeal: 0 },
-    }));
+    let totalCost = 0;
+    let totalMeals = 0;
 
-    res.json({ members: formattedMembers });
+    members.forEach((member) => {
+      totalCost += Number(member.mealStats?.totalDeposit || 0);
+      totalMeals += Number(member.mealStats?.totalMeal || 0);
+    });
+
+    const mealRate = totalMeals > 0 ? totalCost / totalMeals : 0;
+
+    const formattedMembers = members.map((member) => {
+      const stats = member.mealStats || {};
+      const totalMeal = Number(stats.totalMeal || 0);
+      const totalDeposit = Number(stats.totalDeposit || 0);
+      const mealCost = Number((mealRate * totalMeal).toFixed(2));
+      const balance = Number((totalDeposit - mealCost).toFixed(2));
+
+      return {
+        id: member._id,
+        name: member.name,
+        email: member.email,
+        joined: member.createdAt,
+        avatar: `https://i.pravatar.cc/150?u=${member._id}`,
+        mealStats: {
+          totalMeal,
+          totalDeposit,
+          mealCost,
+          balance,
+        },
+      };
+    });
+
+    res.json({ members: formattedMembers, mealRate: mealRate.toFixed(2) });
   } catch (err) {
     console.error("Error fetching members:", err);
     res.status(500).json({ message: "Server error" });
@@ -93,26 +116,40 @@ router.patch("/:userId/meal", verifyToken, async (req, res) => {
 
 router.get("/my-stats", verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).populate("mess");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const {
-      totalMeal = 0,
-      totalDeposit = 0,
-      totalCost = 0,
-    } = user.mealStats || {};
+    const messId = user.mess?._id;
+    if (!messId)
+      return res.status(400).json({ message: "User has no mess assigned" });
 
-    const meal = Number(totalMeal) || 0;
-    const deposit = Number(totalDeposit) || 0;
-    const cost = Number(totalCost) || 0;
+    const totalCostResult = await Cost.aggregate([
+      { $match: { mess: new mongoose.Types.ObjectId(messId) } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
 
-    const balance = deposit - cost;
+    const totalMessCost = totalCostResult[0]?.total || 0;
+
+    const allUsers = await User.find({ mess: messId });
+    const totalMealCount = allUsers.reduce(
+      (acc, u) => acc + (u.mealStats?.totalMeal || 0),
+      0
+    );
+
+    const mealRate = totalMealCount > 0 ? totalMessCost / totalMealCount : 0;
+
+    const userMealCount = user.mealStats?.totalMeal || 0;
+    const userCost = userMealCount * mealRate;
+
+    const userDeposit = user.mealStats?.totalDeposit || 0;
+    const userBalance = userDeposit - userCost;
 
     res.json({
-      totalMeal: meal,
-      totalDeposit: deposit,
-      totalCost: cost,
-      balance: isNaN(balance) ? 0 : balance,
+      totalMeal: userMealCount,
+      totalDeposit: userDeposit,
+      totalCost: userCost,
+      balance: userBalance,
+      mealRate,
     });
   } catch (err) {
     console.error("Error fetching user stats:", err);

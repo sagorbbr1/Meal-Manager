@@ -50,7 +50,6 @@ const AddDeposit = () => {
       };
 
       const res = await API.post("/deposit/add-deposit", payload);
-      console.log("Deposit response:", res);
 
       toast.success("Deposit added successfully!");
       setFormData({ member: "", date: "", amount: "", note: "" });

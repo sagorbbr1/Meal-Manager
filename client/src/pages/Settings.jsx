@@ -24,7 +24,6 @@ const Settings = () => {
 
   const handleProfileSubmit = (e) => {
     e.preventDefault();
-    console.log("Profile updated:", profile);
   };
 
   const handlePasswordSubmit = (e) => {
@@ -33,7 +32,6 @@ const Settings = () => {
       alert("New passwords do not match.");
       return;
     }
-    console.log("Password updated:", passwords);
   };
 
   return (

@@ -4,7 +4,6 @@ import HeaderNav from "../components/HeaderNav";
 import DashboardStats from "../components/DashboardStats";
 import MealDetails from "../components/MealDetails";
 import Chart from "../components/Chart";
-import MealStats from "../components/MealStats";
 import MyMealInfo from "../components/MyMealInfo";
 import { useMess } from "../context/MessContext";
 import API from "../utils/axios";
@@ -22,6 +21,7 @@ const Dashboard = () => {
     fetchMembers();
   }, []);
 
+  console.log(members);
   return (
     <>
       <div className="flex h-screen bg-gradient-to-tr from-emerald-50 to-white overflow-hidden">
@@ -41,7 +41,6 @@ const Dashboard = () => {
 
             <DashboardStats />
 
-            <MealStats />
             <MyMealInfo />
 
             <div className="bg-white rounded-xl shadow p-6">

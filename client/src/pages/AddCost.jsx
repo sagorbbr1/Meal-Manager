@@ -11,8 +11,6 @@ const AddCost = () => {
     note: "",
   });
 
-  const [loading, setLoading] = useState(false);
-
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -22,21 +20,22 @@ const AddCost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
       await API.post("/costs/add-cost", {
         ...formData,
         amount: parseFloat(formData.amount),
       });
-
-      alert("✅ Cost added successfully!");
-      setFormData({ title: "", date: "", amount: "", note: "" });
+      alert("Cost added successfully!");
+      setFormData({
+        title: "",
+        date: "",
+        amount: "",
+        note: "",
+      });
     } catch (err) {
-      console.error("❌ Error adding cost:", err.response?.data || err.message);
-      alert("Failed to add cost. Please try again.");
-    } finally {
-      setLoading(false);
+      console.error("Error adding cost:", err);
+      alert("Failed to add cost.");
     }
   };
 
@@ -51,7 +50,7 @@ const AddCost = () => {
               Add Mess Cost
             </h1>
             <p className="text-gray-600">
-              Record any expense related to mess (e.g. bajaar, gas, etc.)
+              Record any mess-related expense (e.g., bajar, gas bill)
             </p>
           </div>
 
@@ -70,7 +69,7 @@ const AddCost = () => {
                   value={formData.title}
                   onChange={handleChange}
                   required
-                  placeholder="E.g., Bajaar, Gas Bill"
+                  placeholder="E.g., Bajar, Gas Bill"
                   className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
@@ -121,14 +120,9 @@ const AddCost = () => {
 
             <button
               type="submit"
-              disabled={loading}
-              className={`${
-                loading
-                  ? "bg-emerald-400 cursor-not-allowed"
-                  : "bg-emerald-600 hover:bg-emerald-700"
-              } text-white font-medium px-6 py-2 rounded-lg transition`}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-2 rounded-lg transition"
             >
-              {loading ? "Adding..." : "Add Cost"}
+              Add Cost
             </button>
           </form>
         </main>

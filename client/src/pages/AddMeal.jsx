@@ -57,7 +57,6 @@ const AddMeal = () => {
 
   if (loading) return <Spinner authLoading={loading} />;
 
-  console.log("Users:", users);
   return (
     <div className="flex h-screen bg-emerald-50 overflow-hidden">
       <Sidebar />

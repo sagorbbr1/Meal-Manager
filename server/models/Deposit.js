@@ -7,21 +7,16 @@ const depositSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    date: {
-      type: Date,
+    mess: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Mess",
       required: true,
     },
-    amount: {
-      type: Number,
-      required: true,
-    },
-    note: {
-      type: String,
-    },
+    date: { type: Date, required: true },
+    amount: { type: Number, required: true },
+    note: { type: String },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Deposit", depositSchema);

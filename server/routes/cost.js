@@ -37,4 +37,31 @@ router.post("/add-cost", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/all-costs", verifyToken, async (req, res) => {
+  try {
+    const { mess, month, year } = req.query;
+
+    if (!mess) {
+      return res.status(400).json({ message: "Mess ID is required" });
+    }
+
+    let filter = { mess };
+
+    if (month && year) {
+      const start = new Date(year, month - 1, 1);
+      const end = new Date(year, month, 0, 23, 59, 59, 999);
+      filter.date = { $gte: start, $lte: end };
+    }
+
+    const costs = await Cost.find(filter).sort({ date: -1 });
+
+    const total = costs.reduce((acc, item) => acc + item.amount, 0);
+
+    res.json({ costs, total });
+  } catch (err) {
+    console.error("Error fetching costs:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 module.exports = router;

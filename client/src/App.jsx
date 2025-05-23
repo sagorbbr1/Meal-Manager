@@ -19,6 +19,7 @@ import CreateYourMess from "./pages/CreateYourMess";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import { MessProvider } from "./context/MessContext";
+import CostList from "./pages/CostList";
 
 function App() {
   return (
@@ -120,6 +121,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <EditProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/dashboard/all-costs"
+              element={
+                <ProtectedRoute>
+                  <CostList />
                 </ProtectedRoute>
               }
             />
