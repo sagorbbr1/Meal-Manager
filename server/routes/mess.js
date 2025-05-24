@@ -88,4 +88,31 @@ router.get("/stats", verifyToken, async (req, res) => {
   }
 });
 
+router.delete("/delete/:id", verifyToken, async (req, res) => {
+  try {
+    const messId = req.params.id;
+
+    console.log("Deleting mess with ID:", messId);
+
+    const user = await User.findById(req.user.id);
+    if (!user || user.role !== "manager" || String(user.mess) !== messId) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this mess" });
+    }
+
+    await Mess.findByIdAndDelete(messId);
+
+    await User.updateMany(
+      { mess: messId },
+      { $unset: { mess: "", mealStats: "" } }
+    );
+
+    res.json({ message: "Mess deleted successfully" });
+  } catch (err) {
+    console.error("Failed to delete mess:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;

@@ -11,6 +11,7 @@ import {
   CircleDollarSign,
   Settings,
   X,
+  Trash2,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import API from "../utils/axios";
@@ -40,6 +41,36 @@ const Sidebar = () => {
 
   const logout = () => {
     handleLogout(navigate, setUser);
+  };
+
+  const handleDeleteMess = async (mess) => {
+    if (!mess) return;
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this mess? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const response = await API.delete(`/mess/delete/${mess._id}`, {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        alert("Mess deleted successfully.");
+        setUser(null); // Logout or reset local user
+        navigate("/create-your-mess");
+      } else {
+        alert("Failed to delete mess. Try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting mess:", error);
+      alert(
+        error?.response?.data?.message ||
+          "Something went wrong during deletion."
+      );
+    }
   };
 
   return (
@@ -100,6 +131,14 @@ const Sidebar = () => {
               {name}
             </Link>
           ))}
+
+          <button
+            onClick={() => handleDeleteMess(mess)}
+            className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
+          >
+            <Trash2 size={20} /> Delete Mess
+          </button>
+
           <button
             onClick={logout}
             className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
