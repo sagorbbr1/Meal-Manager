@@ -6,9 +6,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import Spinner from "../components/Spinner";
+import { useMess } from "../context/MessContext";
 
 const HomePage = () => {
   const { user, authLoading } = useAuth();
+
   const navigate = useNavigate();
 
   useEffect(() => {

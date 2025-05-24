@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { ClipLoader } from "react-spinners";
 import Spinner from "../components/Spinner";
 
 export const ProtectedRoute = ({ children }) => {

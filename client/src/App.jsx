@@ -20,6 +20,7 @@ import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import { MessProvider } from "./context/MessContext";
 import CostList from "./pages/CostList";
+import HowToUse from "./pages/HowToUse";
 
 function App() {
   return (
@@ -133,6 +134,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/info" element={<HowToUse />} />
 
             <Route path="*" element={<NoPage />} />
           </Routes>

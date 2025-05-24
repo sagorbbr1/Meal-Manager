@@ -4,6 +4,7 @@ import HeaderNav from "../components/HeaderNav";
 import { toast, ToastContainer } from "react-toastify";
 import API from "../utils/axios";
 import Spinner from "../components/Spinner";
+import logo from "../assets/logo.jpg";
 
 const CreateYourMess = () => {
   const [messName, setMessName] = useState("");
@@ -18,7 +19,7 @@ const CreateYourMess = () => {
       try {
         const res = await API.get("/mess/mine", { withCredentials: true });
         if (res.data?.mess) {
-          navigate("/dashboard");
+          window.location.href = "/dashboard";
         } else {
           setLoading(false);
         }
@@ -47,9 +48,13 @@ const CreateYourMess = () => {
         { withCredentials: true }
       );
 
+      if (res.status !== 201) {
+        toast.error("Failed to create mess");
+        return;
+      }
       setShowModal(false);
       toast.success("Mess created successfully!");
-      navigate("/dashboard");
+      window.location.href = "/dashboard";
     } catch (err) {
       console.error("Failed to create mess:", err);
       toast.error("Something went wrong!");
@@ -80,7 +85,6 @@ const CreateYourMess = () => {
   return (
     <>
       <ToastContainer />
-      <HeaderNav />
 
       <div className="flex items-center justify-center h-screen bg-emerald-50 px-4">
         <form
@@ -88,6 +92,11 @@ const CreateYourMess = () => {
           className="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-6"
         >
           <h2 className="text-2xl font-bold text-center text-emerald-700">
+            <img
+              className="logo mx-auto text-center"
+              src={logo}
+              alt="meal manager"
+            />
             Create Your Mess
           </h2>
 

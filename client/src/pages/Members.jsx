@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
 import { Pencil, Trash2, Plus } from "lucide-react";
@@ -40,10 +41,13 @@ const Members = () => {
               <h1 className="text-3xl font-bold text-emerald-700">Members</h1>
               <p className="text-gray-600">All registered members are here.</p>
             </div>
-            <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow-md transition">
+            <Link
+              to="/dashboard/add-member"
+              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow-md transition"
+            >
               <Plus size={18} />
               Add Member
-            </button>
+            </Link>
           </div>
 
           {loading ? (

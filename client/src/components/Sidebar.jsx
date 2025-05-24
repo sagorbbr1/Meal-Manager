@@ -59,7 +59,7 @@ const Sidebar = () => {
 
       if (response.status === 200) {
         alert("Mess deleted successfully.");
-        setUser(null); // Logout or reset local user
+        setUser(null);
         navigate("/create-your-mess");
       } else {
         alert("Failed to delete mess. Try again.");
@@ -91,62 +91,64 @@ const Sidebar = () => {
         <div className="w-6" />
       </header>
 
-      <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:static md:translate-x-0`}
-      >
-        <div className="hidden md:flex items-center justify-between p-3 border-b">
-          <h4 className="text-2xl font-bold text-emerald-600">
-            <div className="flex items-center gap-2">
-              <img className="logo-small" src={logo} alt="meal manager" />
+      {mess && (
+        <aside
+          className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:static md:translate-x-0`}
+        >
+          <div className="hidden md:flex items-center justify-between p-3 border-b">
+            <h4 className="text-2xl font-bold text-emerald-600">
+              <div className="flex items-center gap-2">
+                <img className="logo-small" src={logo} alt="meal manager" />
 
-              <span>{mess && mess.name}</span>
-            </div>
-          </h4>
-        </div>
+                <span>{mess && mess.name}</span>
+              </div>
+            </h4>
+          </div>
 
-        <div className="flex md:hidden justify-end p-4">
-          <button
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Close sidebar"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        <nav className="flex flex-col p-4 space-y-2">
-          {navLinks.map(({ name, icon: Icon, path }) => (
-            <Link
-              key={name}
-              to={path}
+          <div className="flex md:hidden justify-end p-4">
+            <button
               onClick={() => setSidebarOpen(false)}
-              className={`flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 ${
-                location.pathname === path
-                  ? "bg-emerald-100 text-emerald-700"
-                  : "text-gray-700"
-              }`}
+              aria-label="Close sidebar"
             >
-              <Icon size={20} />
-              {name}
-            </Link>
-          ))}
+              <X size={24} />
+            </button>
+          </div>
 
-          <button
-            onClick={() => handleDeleteMess(mess)}
-            className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
-          >
-            <Trash2 size={20} /> Delete Mess
-          </button>
+          <nav className="flex flex-col p-4 space-y-2">
+            {navLinks.map(({ name, icon: Icon, path }) => (
+              <Link
+                key={name}
+                to={path}
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 ${
+                  location.pathname === path
+                    ? "bg-emerald-100 text-emerald-700"
+                    : "text-gray-700"
+                }`}
+              >
+                <Icon size={20} />
+                {name}
+              </Link>
+            ))}
 
-          <button
-            onClick={logout}
-            className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
-          >
-            <LogOut size={20} /> Logout
-          </button>
-        </nav>
-      </aside>
+            <button
+              onClick={() => handleDeleteMess(mess)}
+              className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
+            >
+              <Trash2 size={20} /> Delete Mess
+            </button>
+
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-emerald-100 hover:text-emerald-700 text-gray-700"
+            >
+              <LogOut size={20} /> Logout
+            </button>
+          </nav>
+        </aside>
+      )}
     </>
   );
 };
