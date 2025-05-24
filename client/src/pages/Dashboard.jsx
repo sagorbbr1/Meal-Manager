@@ -46,7 +46,7 @@ const Dashboard = () => {
             <div className="bg-white rounded-xl shadow p-6">
               <MealDetails members={members} />
               <div className="h-64 w-full flex items-center justify-center">
-                <Chart />
+                <Chart members={members} />
               </div>
             </div>
           </main>

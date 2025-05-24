@@ -1,11 +1,12 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const Chart = () => {
+const Chart = ({ members }) => {
+  console.log(members);
   const options = {
-    series: [50, 40, 13, 4, 22],
+    series: members?.map((user) => user.mealStats.mealCost),
     chart: { type: "pie" },
-    labels: ["Team AS", "Team BS", "Team CS", "Team DS", "Team ES"],
+    labels: members?.map((user) => user.name),
     responsive: [
       {
         breakpoint: 480,

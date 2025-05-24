@@ -16,9 +16,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import API from "../utils/axios";
 import { useAuth } from "../context/AuthContext";
 import { handleLogout } from "../utils/logout";
+import { useMess } from "../context/MessContext";
+import logo from "../assets/logo.jpg";
 
 const Sidebar = () => {
   const { user, setUser } = useAuth();
+  const { mess } = useMess();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -45,8 +48,16 @@ const Sidebar = () => {
         <button onClick={() => setSidebarOpen(true)} aria-label="Open sidebar">
           <Menu size={24} />
         </button>
-        <h2 className="text-xl font-bold text-emerald-600">Meal Manager</h2>
-        <div className="w-6" /> {/* empty space to balance flex */}
+        <h2 className="text-xl font-bold text-emerald-600">
+          <img
+            className="logo text-center mx-auto"
+            src={logo}
+            alt="meal manager"
+          />
+
+          {mess && mess.name}
+        </h2>
+        <div className="w-6" />
       </header>
 
       <aside
@@ -55,7 +66,13 @@ const Sidebar = () => {
         } md:static md:translate-x-0`}
       >
         <div className="hidden md:flex items-center justify-between p-3 border-b">
-          <h2 className="text-2xl font-bold text-emerald-600">Meal Manager</h2>
+          <h4 className="text-2xl font-bold text-emerald-600">
+            <div className="flex items-center gap-2">
+              <img className="logo-small" src={logo} alt="meal manager" />
+
+              <span>{mess && mess.name}</span>
+            </div>
+          </h4>
         </div>
 
         <div className="flex md:hidden justify-end p-4">

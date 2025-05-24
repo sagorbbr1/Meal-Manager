@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import API from "../utils/axios";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/logo.jpg";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -43,6 +44,11 @@ const LoginPage = () => {
       <div className="min-h-screen bg-emerald-50 flex items-center justify-center px-4">
         <div className="bg-white shadow-lg rounded-xl p-8 max-w-md w-full">
           <h2 className="text-2xl font-bold text-center text-emerald-600 mb-6">
+            <img
+              className="logo text-center mx-auto"
+              src={logo}
+              alt="meal manager"
+            />
             Login to Meal Manager
           </h2>
 

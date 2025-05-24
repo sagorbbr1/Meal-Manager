@@ -2,9 +2,11 @@ import React from "react";
 import { Bell, Info, UserCircle, LayoutDashboard } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import { useMess } from "../context/MessContext";
 
-const HeaderNav = ({ mess = name }) => {
+const HeaderNav = () => {
   const { user } = useAuth();
+  const { mess } = useMess();
 
   const navigate = useNavigate();
 
@@ -12,7 +14,11 @@ const HeaderNav = ({ mess = name }) => {
     <header className="w-full bg-emerald-50 shadow-sm z-20">
       <div className="hidden md:flex items-center justify-between px-6 py-4">
         <div className="text-emerald-700 text-xl font-bold">
-          <h2>{user && user.name ? `Hello, ${user.name}` : "Meal Manager"}</h2>
+          <h2>
+            {user && user.name
+              ? `Welcome back, ${user.name} 👋`
+              : "Welcome to Meal Manager 🍽️"}
+          </h2>
         </div>
 
         <div className="flex gap-6 items-center">

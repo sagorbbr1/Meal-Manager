@@ -34,6 +34,7 @@ router.post("/add-member", verifyToken, async (req, res) => {
 
   res.status(201).json({ message: "Member added", user: newUser });
 });
+
 router.get("/my-members", verifyToken, async (req, res) => {
   try {
     const currentUser = await User.findById(req.user.id);
@@ -43,18 +44,23 @@ router.get("/my-members", verifyToken, async (req, res) => {
         .json({ message: "User does not belong to any mess" });
     }
 
+    // STEP 1: Get all members in the mess
     const members = await User.find({ mess: currentUser.mess });
 
-    let totalCost = 0;
-    let totalMeals = 0;
+    // STEP 2: Get total cost from Cost entries for this mess
+    const costs = await Cost.find({ mess: currentUser.mess });
+    const totalCost = costs.reduce((sum, cost) => sum + (cost.amount || 0), 0);
 
-    members.forEach((member) => {
-      totalCost += Number(member.mealStats?.totalDeposit || 0);
-      totalMeals += Number(member.mealStats?.totalMeal || 0);
-    });
+    // STEP 3: Get total meals from members
+    const totalMeals = members.reduce(
+      (sum, member) => sum + (member.mealStats?.totalMeal || 0),
+      0
+    );
 
+    // STEP 4: Calculate meal rate
     const mealRate = totalMeals > 0 ? totalCost / totalMeals : 0;
 
+    // STEP 5: Format each member with calculated meal cost + balance
     const formattedMembers = members.map((member) => {
       const stats = member.mealStats || {};
       const totalMeal = Number(stats.totalMeal || 0);
@@ -72,12 +78,18 @@ router.get("/my-members", verifyToken, async (req, res) => {
           totalMeal,
           totalDeposit,
           mealCost,
+          totalCost: mealCost, // meal cost is their total cost
           balance,
         },
       };
     });
 
-    res.json({ members: formattedMembers, mealRate: mealRate.toFixed(2) });
+    res.json({
+      members: formattedMembers,
+      mealRate: mealRate.toFixed(2),
+      totalCost: totalCost.toFixed(2),
+      totalMeals,
+    });
   } catch (err) {
     console.error("Error fetching members:", err);
     res.status(500).json({ message: "Server error" });

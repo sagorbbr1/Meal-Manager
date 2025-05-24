@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
+import logo from "../assets/logo.jpg";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -11,7 +12,9 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-emerald-600">Meal Manager</h1>
+        <h1 className="text-2xl font-bold text-emerald-600">
+          <img className="logo" src={logo} alt="meal manager" />
+        </h1>
 
         <div className="hidden md:flex items-center space-x-6">
           <a

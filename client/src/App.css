@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.logo {
+  width: 75px;
+}
+
+.logo-small {
+  width: 55px;
+}
