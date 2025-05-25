@@ -25,7 +25,6 @@ router.post("/add-deposit", verifyToken, async (req, res) => {
     const user = await User.findById(member);
     if (!user) return res.status(404).json({ message: "Member not found" });
 
-    console.log("User found:", user);
     const deposit = new Deposit({
       member,
       date,

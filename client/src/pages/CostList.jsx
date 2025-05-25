@@ -10,7 +10,6 @@ const CostList = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // You can dynamically get the current month/year if needed
   const today = new Date();
   const month = today.getMonth() + 1;
   const year = today.getFullYear();

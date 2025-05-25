@@ -41,10 +41,7 @@ const AddMember = () => {
       }
       setFormData({ name: "", email: "", joined: "" });
     } catch (error) {
-      console.error(
-        "Error saving user:",
-        error.response?.data || error.message
-      );
+      toast.error("Error saving user:", error.response?.data || error.message);
     }
   };
 

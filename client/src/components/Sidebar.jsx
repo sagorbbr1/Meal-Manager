@@ -35,7 +35,6 @@ const Sidebar = () => {
     { name: "Add Deposite", icon: FileText, path: "/dashboard/add-deposite" },
     { name: "Add Cost", icon: HandCoins, path: "/dashboard/add-cost" },
     { name: "Cost List", icon: CircleDollarSign, path: "/dashboard/all-costs" },
-    { name: "Reports", icon: FileText, path: "/dashboard/reports" },
     { name: "Settings", icon: Settings, path: "/dashboard/settings" },
   ];
 

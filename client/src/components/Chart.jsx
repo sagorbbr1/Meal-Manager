@@ -2,7 +2,6 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 const Chart = ({ members }) => {
-  console.log(members);
   const options = {
     series: members?.map((user) => user.mealStats.mealCost),
     chart: { type: "pie" },

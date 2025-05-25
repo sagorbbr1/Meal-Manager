@@ -169,4 +169,42 @@ router.get("/my-stats", verifyToken, async (req, res) => {
   }
 });
 
+router.put("/edit/:id", verifyToken, async (req, res) => {
+  const memberId = req.params.id;
+  const { name, email } = req.body;
+
+  try {
+    if (!name || !email) {
+      return res.status(400).json({ error: "Name and email are required" });
+    }
+
+    const updatedMember = await User.findOneAndUpdate(
+      { _id: memberId },
+      { name, email },
+      { new: true }
+    );
+
+    if (!updatedMember) {
+      return res.status(404).json({ error: "Member not found" });
+    }
+
+    res.status(200).json({
+      message: "Member updated successfully",
+      member: updatedMember,
+    });
+  } catch (error) {
+    console.error("Edit Member Error:", error);
+    res.status(500).json({ error: "Failed to update member" });
+  }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "Member deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Deletion failed", error });
+  }
+});
+
 module.exports = router;

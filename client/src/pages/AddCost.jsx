@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
 import API from "../utils/axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const AddCost = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const AddCost = () => {
         ...formData,
         amount: parseFloat(formData.amount),
       });
-      alert("Cost added successfully!");
+      toast.success("Cost added successfully!");
       setFormData({
         title: "",
         date: "",
@@ -35,13 +36,14 @@ const AddCost = () => {
       });
     } catch (err) {
       console.error("Error adding cost:", err);
-      alert("Failed to add cost.");
+      toast.error("Failed to add cost.");
     }
   };
 
   return (
     <div className="flex h-screen bg-emerald-50 overflow-hidden">
       <Sidebar />
+      <ToastContainer />
       <div className="flex-1 flex flex-col overflow-auto">
         <HeaderNav />
         <main className="p-6 max-w-4xl mx-auto space-y-8">

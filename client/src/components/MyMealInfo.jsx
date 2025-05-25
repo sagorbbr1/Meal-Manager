@@ -33,7 +33,6 @@ const MyMealInfo = () => {
       </p>
     );
 
-  // Safe fallback to 0 if any field is missing or not a number
   const safeNum = (num) => {
     const n = Number(num);
     return isNaN(n) ? 0 : n;

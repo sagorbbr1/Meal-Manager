@@ -92,8 +92,6 @@ router.delete("/delete/:id", verifyToken, async (req, res) => {
   try {
     const messId = req.params.id;
 
-    console.log("Deleting mess with ID:", messId);
-
     const user = await User.findById(req.user.id);
     if (!user || user.role !== "manager" || String(user.mess) !== messId) {
       return res

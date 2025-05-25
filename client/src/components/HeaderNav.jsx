@@ -2,13 +2,9 @@ import React from "react";
 import { Bell, Info, UserCircle, LayoutDashboard } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router";
-import { useMess } from "../context/MessContext";
 
 const HeaderNav = () => {
   const { user } = useAuth();
-  const { mess } = useMess();
-
-  const navigate = useNavigate();
 
   return (
     <header className="w-full bg-emerald-50 shadow-sm z-20">
@@ -25,10 +21,10 @@ const HeaderNav = () => {
           <Link to="/dashboard">
             <LayoutDashboard className="w-6 h-6 text-emerald-600 cursor-pointer" />
           </Link>
-          <Link to="/notifications">
+          {/* <Link to="/notifications">
             {" "}
             <Bell className="w-6 h-6 text-gray-500 hover:text-emerald-600 cursor-pointer" />
-          </Link>
+          </Link> */}
           <Link to="/info">
             <Info className="w-6 h-6 text-gray-500 hover:text-emerald-600 cursor-pointer" />
           </Link>
@@ -44,9 +40,9 @@ const HeaderNav = () => {
             <LayoutDashboard className="w-6 h-6 text-emerald-600" />
           </Link>
 
-          <Link to="/notifications">
+          {/* <Link to="/notifications">
             <Bell className="w-6 h-6 text-gray-500 hover:text-emerald-600" />
-          </Link>
+          </Link> */}
 
           <Link to="/info">
             <Info className="w-6 h-6 text-gray-500 hover:text-emerald-600" />

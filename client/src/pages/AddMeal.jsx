@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, UserCircle } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import HeaderNav from "../components/HeaderNav";
 import API from "../utils/axios";
@@ -78,13 +78,7 @@ const AddMeal = () => {
                 className="flex items-center justify-between border-b py-2"
               >
                 <div className="flex items-center space-x-4 min-w-0">
-                  <img
-                    src={
-                      user.avatar || `https://i.pravatar.cc/150?u=${user._id}`
-                    }
-                    alt={`${user.name} avatar`}
-                    className="w-12 h-12 rounded-full object-cover border border-emerald-300"
-                  />
+                  <UserCircle size={48} className="text-emerald-600" />
                   <p className="font-semibold text-lg text-gray-800 truncate max-w-xs">
                     {user.name}
                   </p>
