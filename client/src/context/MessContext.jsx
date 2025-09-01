@@ -11,15 +11,16 @@ export const MessProvider = ({ children }) => {
   const { user } = useAuth();
 
   useEffect(() => {
+    if (!user) return;
+
     const fetchMess = async () => {
+      setMessLoading(true);
       try {
-        if (user) {
-          const res = await API.get("/mess/mine", { withCredentials: true });
-          setMess(res.data.mess);
-          if (res.data.members) setMembers(res.data.members);
-        }
+        const res = await API.get("/mess/mine", { withCredentials: true });
+        setMess(res.data.mess);
+        setMembers(res.data.members || []);
       } catch (err) {
-        console.error("MessContext error:", err);
+        console.error("MessContext error:", err.response || err);
       } finally {
         setMessLoading(false);
       }
