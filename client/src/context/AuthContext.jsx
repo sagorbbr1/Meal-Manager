@@ -13,7 +13,10 @@ export const AuthProvider = ({ children }) => {
         const res = await API.get("/auth/user", { withCredentials: true });
         setUser(res.data.user);
       } catch (err) {
-        setUser(null);
+        if (err.response?.status !== 401) {
+          console.error("Auth check failed:", err);
+        }
+        setUser(null); // silently handle 401
       } finally {
         setAuthLoading(false);
       }
@@ -21,6 +24,7 @@ export const AuthProvider = ({ children }) => {
 
     checkAuth();
   }, []);
+
   return (
     <AuthContext.Provider value={{ user, setUser, authLoading }}>
       {children}
